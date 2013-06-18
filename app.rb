@@ -3,6 +3,9 @@ require 'open3'
 require 'sinatra'
 
 require './lib/event_response'
+require './lib/garbage_collect'
+require './lib/reset_repository'
+require './lib/purge_cache'
 
 get '/commands/*', provides: 'text/event-stream' do
   command_class = nil
