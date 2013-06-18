@@ -26,6 +26,6 @@ class GarbageCollect
 
   def capture(command)
     "script -q /dev/null #{command}" if RUBY_PLATFORM.downcase.include?('darwin')
-    "script -q -c '#{command}' /dev/null"
+    command
   end
 end
