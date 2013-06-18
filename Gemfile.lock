@@ -23,6 +23,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  eventmachine
   foreman
   sinatra
   thin
