@@ -8,7 +8,11 @@ require './lib/reset_repository'
 require './lib/purge_cache'
 
 get '/commands/*', provides: 'text/event-stream' do
-  command_class = nil
+  command_class = case params.fetch('splat').first
+                  when 'gc'          then GarbageCollect
+                  when 'reset'       then ResetRepository
+                  when 'purge_cache' then PurgeCache
+                  end
 
   not_found if command_class.nil?
 
