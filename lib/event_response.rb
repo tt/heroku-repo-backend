@@ -15,4 +15,15 @@ class EventResponse
     write('close')
     @out.close
   end
+
+  class IO
+    def initialize(event, response)
+      @event = event
+      @response = response
+    end
+
+    def write(data)
+      @response.write(@event, data)
+    end
+  end
 end
