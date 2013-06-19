@@ -1,6 +1,21 @@
 require_relative '../lib/event_response'
 
 describe EventResponse do
+  context '#initialize' do
+    it 'starts a timer' do
+      EventMachine::PeriodicTimer.should_receive(:new)
+      response = EventResponse.new(stub)
+    end
+
+    it 'starts a timer that writes a heartbeat' do
+      EventResponse.any_instance.should_receive(:write).with('heartbeat')
+      EventMachine::PeriodicTimer.stub(:new) do |interval, &block|
+        block.call
+      end
+      response = EventResponse.new(stub)
+    end
+  end
+
   context '#write' do
     before do
       EventMachine::PeriodicTimer.stub(:new)
