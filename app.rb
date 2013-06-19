@@ -31,6 +31,11 @@ get '/commands/*', provides: 'text/event-stream' do
 
   release = heroku.get_release(params.fetch('app'), 'new')
 
+  params = {
+    'get' => release.body['repo_get_url'],
+    'put' => release.body['repo_put_url']
+  }
+
   command = command_class.new(params)
 
   stream(:keep_open) do |out|
