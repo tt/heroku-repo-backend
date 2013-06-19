@@ -29,6 +29,8 @@ get '/commands/*', provides: 'text/event-stream' do
 
   heroku = Heroku::API.new(:username => auth.username, :password => auth.password)
 
+  release = heroku.get_release(params.fetch('app'), 'new')
+
   command = command_class.new(params)
 
   stream(:keep_open) do |out|
