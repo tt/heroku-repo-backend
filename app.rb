@@ -61,7 +61,8 @@ get '/commands/*', provides: 'text/event-stream' do
 
         bytes = input.read_nonblock(1024)
 
-        response.write mapping.fetch(input), Base64.strict_encode64(bytes)
+        output = mapping.fetch(input)
+        response.write output, Base64.strict_encode64(bytes)
       end
     end
 
