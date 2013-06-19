@@ -7,6 +7,10 @@ require './lib/garbage_collect'
 require './lib/reset_repository'
 require './lib/purge_cache'
 
+class Rack::Auth::Basic::Request
+  def password; credentials.last; end
+end
+
 get '/commands/*', provides: 'text/event-stream' do
   auth = Rack::Auth::Basic::Request.new(request.env)
 
