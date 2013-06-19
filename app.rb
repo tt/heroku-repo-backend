@@ -1,4 +1,5 @@
 require 'base64'
+require 'heroku-api'
 require 'open3'
 require 'sinatra'
 
@@ -25,6 +26,8 @@ get '/commands/*', provides: 'text/event-stream' do
                   end
 
   not_found if command_class.nil?
+
+  heroku = Heroku::API.new(:username => auth.username, :password => auth.password)
 
   command = command_class.new(params)
 
