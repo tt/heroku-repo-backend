@@ -44,8 +44,8 @@ get '/commands/*', provides: 'text/event-stream' do
     stdin, stdout, stderr = Open3.popen3(command.to_s)
 
     mapping = {
-      stdout => 'out',
-      stderr => 'err'
+      stdout => Event::IO.new('out', response),
+      stderr => Event::IO.new('err', response)
     }
 
     reads = mapping.keys
@@ -62,7 +62,7 @@ get '/commands/*', provides: 'text/event-stream' do
         bytes = input.read_nonblock(1024)
 
         output = mapping.fetch(input)
-        response.write output, Base64.strict_encode64(bytes)
+        output.write Base64.strict_encode64(bytes)
       end
     end
 
