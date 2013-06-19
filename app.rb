@@ -43,12 +43,12 @@ get '/commands/*', provides: 'text/event-stream' do
 
     stdin, stdout, stderr = Open3.popen3(command.to_s)
 
-    reads = [stdout, stderr]
-
     mapping = {
       stdout => 'out',
       stderr => 'err'
     }
+
+    reads = [stdout, stderr]
 
     while reads.length > 0
       (inputs, _, _) = IO.select(reads)
