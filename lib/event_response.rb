@@ -1,3 +1,4 @@
+require 'base64'
 require 'eventmachine'
 
 class EventResponse
@@ -14,5 +15,16 @@ class EventResponse
     @timer.cancel
     write('close')
     @out.close
+  end
+
+  class IO
+    def initialize(event, response)
+      @event = event
+      @response = response
+    end
+
+    def write(data)
+      @response.write(@event, Base64.strict_encode64(data))
+    end
   end
 end

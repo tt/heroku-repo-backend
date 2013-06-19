@@ -1,4 +1,3 @@
-require 'base64'
 require 'heroku-api'
 require 'open3'
 require 'sinatra'
@@ -43,27 +42,12 @@ get '/commands/*', provides: 'text/event-stream' do
 
     stdin, stdout, stderr = Open3.popen3(command.to_s)
 
-    reads = [stdout, stderr]
-
     mapping = {
-      stdout => 'out',
-      stderr => 'err'
+      stdout => Event::IO.new('out', response),
+      stderr => Event::IO.new('err', response)
     }
 
-    while reads.length > 0
-      (inputs, _, _) = IO.select(reads)
-
-      inputs.each do |input|
-        if input.eof?
-          reads.delete(input)
-          break
-        end
-
-        bytes = input.read_nonblock(1024)
-
-        response.write mapping.fetch(input), Base64.strict_encode64(bytes)
-      end
-    end
+    IO.join(mapping)
 
     response.close
   end
