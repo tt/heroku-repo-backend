@@ -8,4 +8,5 @@ gem 'thin'
 
 group :development do
   gem 'foreman'
+  gem 'rspec'
 end
