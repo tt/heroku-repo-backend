@@ -6,6 +6,7 @@ require './lib/event_response'
 require './lib/garbage_collect'
 require './lib/reset_repository'
 require './lib/purge_cache'
+require './lib/update_reference'
 
 class Rack::Auth::Basic::Request
   def password; credentials.last; end
@@ -22,6 +23,7 @@ get '/commands/*', provides: 'text/event-stream' do
                   when 'gc'          then GarbageCollect
                   when 'reset'       then ResetRepository
                   when 'purge_cache' then PurgeCache
+                  when 'update-ref'  then UpdateReference
                   end
 
   not_found if command_class.nil?
@@ -30,10 +32,10 @@ get '/commands/*', provides: 'text/event-stream' do
 
   release = heroku.get_release(params.fetch('app'), 'new')
 
-  params = {
+  params.merge!({
     'get' => release.body['repo_get_url'],
     'put' => release.body['repo_put_url']
-  }
+  })
 
   command = command_class.new(params)
 
