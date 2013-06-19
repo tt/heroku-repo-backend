@@ -35,4 +35,35 @@ describe EventResponse do
       response.write('poke')
     end
   end
+
+  context '#close' do
+    it 'closes the out' do
+      EventMachine::PeriodicTimer.stub(:new) { stub.as_null_object }
+      out = mock
+      out.stub(:<<)
+      out.should_receive(:close)
+      response = EventResponse.new(out)
+      response.close
+    end
+
+    it 'stops the timer' do
+      timer = mock
+      timer.should_receive(:cancel)
+      EventMachine::PeriodicTimer.stub(:new) { timer }
+      out = mock
+      out.stub(:<<)
+      out.stub(:close)
+      response = EventResponse.new(out)
+      response.close
+    end
+
+    it 'writes an event' do
+      EventResponse.any_instance.should_receive(:write).with('close')
+      EventMachine::PeriodicTimer.stub(:new) { stub.as_null_object }
+      out = mock
+      out.stub(:close)
+      response = EventResponse.new(out)
+      response.close
+    end
+  end
 end
