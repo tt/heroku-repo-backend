@@ -14,7 +14,7 @@ class IO
         bytes = input.read_nonblock(1024)
 
         output = mapping.fetch(input)
-        output.write Base64.strict_encode64(bytes)
+        output.write bytes
       end
     end
   end

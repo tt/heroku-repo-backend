@@ -1,4 +1,3 @@
-require 'base64'
 require 'heroku-api'
 require 'open3'
 require 'sinatra'

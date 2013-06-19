@@ -1,3 +1,4 @@
+require 'base64'
 require 'eventmachine'
 
 class EventResponse
@@ -23,7 +24,7 @@ class EventResponse
     end
 
     def write(data)
-      @response.write(@event, data)
+      @response.write(@event, Base64.strict_encode64(data))
     end
   end
 end
