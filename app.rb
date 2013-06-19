@@ -48,7 +48,7 @@ get '/commands/*', provides: 'text/event-stream' do
       stderr => 'err'
     }
 
-    reads = [stdout, stderr]
+    reads = mapping.keys
 
     while reads.length > 0
       (inputs, _, _) = IO.select(reads)
