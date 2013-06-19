@@ -23,6 +23,7 @@ get '/commands/*', provides: 'text/event-stream' do
                   when 'gc'          then GarbageCollect
                   when 'reset'       then ResetRepository
                   when 'purge_cache' then PurgeCache
+                  when 'update-ref'  then UpdateReference
                   end
 
   not_found if command_class.nil?
