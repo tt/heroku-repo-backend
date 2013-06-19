@@ -48,23 +48,7 @@ get '/commands/*', provides: 'text/event-stream' do
       stderr => Event::IO.new('err', response)
     }
 
-    reads = mapping.keys
-
-    while reads.length > 0
-      (inputs, _, _) = IO.select(reads)
-
-      inputs.each do |input|
-        if input.eof?
-          reads.delete(input)
-          break
-        end
-
-        bytes = input.read_nonblock(1024)
-
-        output = mapping.fetch(input)
-        output.write Base64.strict_encode64(bytes)
-      end
-    end
+    IO.join(mapping)
 
     response.close
   end
