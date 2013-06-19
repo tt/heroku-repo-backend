@@ -6,6 +6,7 @@ require './lib/event_response'
 require './lib/garbage_collect'
 require './lib/reset_repository'
 require './lib/purge_cache'
+require './lib/update_reference'
 
 class Rack::Auth::Basic::Request
   def password; credentials.last; end
