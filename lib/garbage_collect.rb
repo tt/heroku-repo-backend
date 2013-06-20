@@ -1,5 +1,3 @@
-require 'tmpdir'
-
 class GarbageCollect
   def initialize(release)
     warn release.inspect
@@ -7,8 +5,7 @@ class GarbageCollect
     @put_object_url = release.fetch('repo_put_url')
   end
 
-  def to_s
-    work_dir = Dir.mktmpdir
+  def to_s(work_dir)
     "
     cd #{work_dir}
     curl -o repo.tgz '#{@get_object_url}'

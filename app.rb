@@ -1,6 +1,7 @@
 require 'heroku-api'
 require 'open3'
 require 'sinatra'
+require 'tmpdir'
 
 require './lib/event_response'
 require './lib/io'
@@ -37,7 +38,9 @@ helpers do
     stream(:keep_open) do |out|
       response = EventResponse.new(out)
 
-      stdin, stdout, stderr = Open3.popen3(command.to_s)
+      work_dir = Dir.mktmpdir
+
+      stdin, stdout, stderr = Open3.popen3(command.to_s(work_dir))
 
       mapping = {
         stdout => EventResponse::IO.new('out', response),

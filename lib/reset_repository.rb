@@ -1,12 +1,9 @@
-require 'tmpdir'
-
 class ResetRepository
   def initialize(release)
     @put_object_url = release.fetch('repo_put_url')
   end
 
-  def to_s
-    work_dir = Dir.mktmpdir
+  def to_s(work_dir)
     "
     cd #{work_dir}
     mkdir -p unpack

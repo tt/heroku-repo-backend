@@ -1,5 +1,3 @@
-require 'tmpdir'
-
 class UpdateReference
   def initialize(release, sha1)
     @get_object_url = release.fetch('repo_get_url')
@@ -7,8 +5,7 @@ class UpdateReference
     @sha1 = sha1
   end
 
-  def to_s
-    work_dir = Dir.mktmpdir
+  def to_s(work_dir)
     "
     cd #{work_dir}
     curl -o repo.tgz '#{@get_object_url}'
