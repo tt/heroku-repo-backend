@@ -25,9 +25,11 @@ helpers do
     end
   end
 
-  def execute(command_class)
-    heroku = Heroku::API.new(:username => auth.username, :password => auth.password)
+  def heroku
+    Heroku::API.new(:username => auth.username, :password => auth.password)
+  end
 
+  def execute(command_class)
     release = heroku.get_release(params.fetch('app'), 'new')
 
     params.merge!({
