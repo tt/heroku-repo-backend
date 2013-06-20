@@ -38,9 +38,7 @@ helpers do
     })
   end
 
-  def execute(command_class)
-    command = command_class.new(arguments)
-
+  def execute(command)
     stream(:keep_open) do |out|
       response = EventResponse.new(out)
 
@@ -61,20 +59,20 @@ end
 
 get '/commands/gc', provides: 'text/event-stream' do
   protected!
-  execute GarbageCollect
+  execute GarbageCollect.new(arguments)
 end
 
 get '/commands/purge_cache', provides: 'text/event-stream' do
   protected!
-  execute PurgeCache
+  execute PurgeCache.new(arguments)
 end
 
 get '/commands/reset', provides: 'text/event-stream' do
   protected!
-  execute ResetRepository
+  execute ResetRepository.new(arguments)
 end
 
 get '/commands/update-ref', provides: 'text/event-stream' do
   protected!
-  execute UpdateReference
+  execute UpdateReference.new(arguments)
 end
