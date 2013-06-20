@@ -29,15 +29,17 @@ helpers do
     Heroku::API.new(:username => auth.username, :password => auth.password)
   end
 
-  def execute(command_class)
+  def arguments
     release = heroku.get_release(params.fetch('app'), 'new')
 
-    params.merge!({
+    params.merge({
       'get' => release.body['repo_get_url'],
       'put' => release.body['repo_put_url']
     })
+  end
 
-    command = command_class.new(params)
+  def execute(command_class)
+    command = command_class.new(arguments)
 
     stream(:keep_open) do |out|
       response = EventResponse.new(out)
