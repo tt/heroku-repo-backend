@@ -45,8 +45,8 @@ get '/commands/*', provides: 'text/event-stream' do
     stdin, stdout, stderr = Open3.popen3(command.to_s)
 
     mapping = {
-      stdout => Event::IO.new('out', response),
-      stderr => Event::IO.new('err', response)
+      stdout => EventResponse::IO.new('out', response),
+      stderr => EventResponse::IO.new('err', response)
     }
 
     IO.join(mapping)
