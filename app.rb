@@ -60,8 +60,8 @@ get '/commands/*', provides: 'text/event-stream' do
 
   command_class = case params.fetch('splat').first
                   when 'gc'          then GarbageCollect
-                  when 'reset'       then ResetRepository
                   when 'purge_cache' then PurgeCache
+                  when 'reset'       then ResetRepository
                   when 'update-ref'  then UpdateReference
                   end
 
