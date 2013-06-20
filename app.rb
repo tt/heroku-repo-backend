@@ -1,3 +1,4 @@
+require 'fileutils'
 require 'heroku-api'
 require 'open3'
 require 'sinatra'
@@ -48,6 +49,8 @@ helpers do
       }
 
       IO.join(mapping)
+
+      FileUtils.rm_r work_dir
 
       response.close
     end
