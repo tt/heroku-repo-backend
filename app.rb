@@ -3,6 +3,7 @@ require 'open3'
 require 'sinatra'
 
 require './lib/event_response'
+require './lib/io'
 require './lib/garbage_collect'
 require './lib/reset_repository'
 require './lib/purge_cache'
