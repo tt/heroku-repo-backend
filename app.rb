@@ -55,17 +55,22 @@ helpers do
 
 end
 
-get '/commands/*', provides: 'text/event-stream' do
+get '/commands/gc', provides: 'text/event-stream' do
   protected!
+  execute GarbageCollect
+end
 
-  command_class = case params.fetch('splat').first
-                  when 'gc'          then GarbageCollect
-                  when 'purge_cache' then PurgeCache
-                  when 'reset'       then ResetRepository
-                  when 'update-ref'  then UpdateReference
-                  end
+get '/commands/purge_cache', provides: 'text/event-stream' do
+  protected!
+  execute PurgeCache
+end
 
-  not_found if command_class.nil?
+get '/commands/reset', provides: 'text/event-stream' do
+  protected!
+  execute ResetRepository
+end
 
-  execute command_class
+get '/commands/update-ref', provides: 'text/event-stream' do
+  protected!
+  execute UpdateReference
 end
