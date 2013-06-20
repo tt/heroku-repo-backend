@@ -1,6 +1,5 @@
 class GarbageCollect
   def initialize(release)
-    warn release.inspect
     @get_object_url = release.fetch('repo_get_url')
     @put_object_url = release.fetch('repo_put_url')
   end
