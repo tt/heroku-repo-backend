@@ -16,7 +16,7 @@ end
 helpers do
 
   def auth
-    Rack::Auth::Basic::Request.new(request.env)
+    @auth ||= Rack::Auth::Basic::Request.new(request.env)
   end
 
   def protected!
@@ -26,11 +26,11 @@ helpers do
   end
 
   def heroku
-    Heroku::API.new(:username => auth.username, :password => auth.password)
+    @heroku ||= Heroku::API.new(:username => auth.username, :password => auth.password)
   end
 
   def release
-    heroku.get_release(params.fetch('app'), 'new').body
+    @release ||= heroku.get_release(params.fetch('app'), 'new').body
   end
 
   def arguments
