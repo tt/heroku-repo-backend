@@ -30,11 +30,11 @@ helpers do
   end
 
   def arguments
-    release = heroku.get_release(params.fetch('app'), 'new')
+    release = heroku.get_release(params.fetch('app'), 'new').body
 
     params.merge({
-      'get' => release.body['repo_get_url'],
-      'put' => release.body['repo_put_url']
+      'get' => release['repo_get_url'],
+      'put' => release['repo_put_url']
     })
   end
 
