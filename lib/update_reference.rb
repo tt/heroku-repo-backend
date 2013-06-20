@@ -1,10 +1,10 @@
 require 'tmpdir'
 
 class UpdateReference
-  def initialize(params={})
-    @get_object_url = params.fetch('get')
-    @put_object_url = params.fetch('put')
-    @sha1 = params.fetch('sha1')
+  def initialize(release, sha1)
+    @get_object_url = release.fetch('repo_get_url')
+    @put_object_url = release.fetch('repo_put_url')
+    @sha1 = sha1
   end
 
   def to_s

@@ -13,45 +13,61 @@ class Rack::Auth::Basic::Request
   def password; credentials.last; end
 end
 
-get '/commands/*', provides: 'text/event-stream' do
-  auth = Rack::Auth::Basic::Request.new(request.env)
+helpers do
 
-  if not auth.provided? or not auth.basic?
-    halt 401, { 'WWW-Authenticate' => 'Basic realm="Heroku"' }, ''
+  def auth
+    @auth ||= Rack::Auth::Basic::Request.new(request.env)
   end
 
-  command_class = case params.fetch('splat').first
-                  when 'gc'          then GarbageCollect
-                  when 'reset'       then ResetRepository
-                  when 'purge_cache' then PurgeCache
-                  when 'update-ref'  then UpdateReference
-                  end
-
-  not_found if command_class.nil?
-
-  heroku = Heroku::API.new(:username => auth.username, :password => auth.password)
-
-  release = heroku.get_release(params.fetch('app'), 'new')
-
-  params.merge!({
-    'get' => release.body['repo_get_url'],
-    'put' => release.body['repo_put_url']
-  })
-
-  command = command_class.new(params)
-
-  stream(:keep_open) do |out|
-    response = EventResponse.new(out)
-
-    stdin, stdout, stderr = Open3.popen3(command.to_s)
-
-    mapping = {
-      stdout => EventResponse::IO.new('out', response),
-      stderr => EventResponse::IO.new('err', response)
-    }
-
-    IO.join(mapping)
-
-    response.close
+  def protected!
+    if not auth.provided? or not auth.basic?
+      halt 401, { 'WWW-Authenticate' => 'Basic realm="Heroku"' }, ''
+    end
   end
+
+  def heroku
+    @heroku ||= Heroku::API.new(:username => auth.username, :password => auth.password)
+  end
+
+  def release
+    @release ||= heroku.get_release(params.fetch('app'), 'new').body
+  end
+
+  def execute(command)
+    stream(:keep_open) do |out|
+      response = EventResponse.new(out)
+
+      stdin, stdout, stderr = Open3.popen3(command.to_s)
+
+      mapping = {
+        stdout => EventResponse::IO.new('out', response),
+        stderr => EventResponse::IO.new('err', response)
+      }
+
+      IO.join(mapping)
+
+      response.close
+    end
+  end
+
+end
+
+get '/commands/gc', provides: 'text/event-stream' do
+  protected!
+  execute GarbageCollect.new(release)
+end
+
+get '/commands/purge_cache', provides: 'text/event-stream' do
+  protected!
+  execute PurgeCache.new(release)
+end
+
+get '/commands/reset', provides: 'text/event-stream' do
+  protected!
+  execute ResetRepository.new(release)
+end
+
+get '/commands/update-ref', provides: 'text/event-stream' do
+  protected!
+  execute UpdateReference.new(release, params.fetch('sha1'))
 end

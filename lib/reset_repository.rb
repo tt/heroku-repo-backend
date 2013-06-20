@@ -1,8 +1,8 @@
 require 'tmpdir'
 
 class ResetRepository
-  def initialize(params={})
-    @put_object_url = params.fetch('put')
+  def initialize(release)
+    @put_object_url = release.fetch('repo_put_url')
   end
 
   def to_s
