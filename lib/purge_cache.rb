@@ -1,9 +1,9 @@
 require 'tmpdir'
 
 class PurgeCache
-  def initialize(params={})
-    @get_object_url = params.fetch('get')
-    @put_object_url = params.fetch('put')
+  def initialize(release)
+    @get_object_url = release.fetch('repo_get_url')
+    @put_object_url = release.fetch('repo_put_url')
   end
 
   def to_s

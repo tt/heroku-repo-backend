@@ -61,20 +61,20 @@ end
 
 get '/commands/gc', provides: 'text/event-stream' do
   protected!
-  execute GarbageCollect.new(arguments)
+  execute GarbageCollect.new(release)
 end
 
 get '/commands/purge_cache', provides: 'text/event-stream' do
   protected!
-  execute PurgeCache.new(arguments)
+  execute PurgeCache.new(release)
 end
 
 get '/commands/reset', provides: 'text/event-stream' do
   protected!
-  execute ResetRepository.new(arguments)
+  execute ResetRepository.new(release)
 end
 
 get '/commands/update-ref', provides: 'text/event-stream' do
   protected!
-  execute UpdateReference.new(arguments)
+  execute UpdateReference.new(release, params.fetch('sha1'))
 end
