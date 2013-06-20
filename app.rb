@@ -26,7 +26,7 @@ helpers do
   end
 
   def heroku
-    @heroku ||= Heroku::API.new(:username => auth.username, :password => auth.password)
+    @heroku ||= Heroku::API.new(:api_key => auth.username)
   end
 
   def release
