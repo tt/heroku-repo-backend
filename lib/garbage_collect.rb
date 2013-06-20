@@ -15,8 +15,6 @@ class GarbageCollect
     #{capture('git gc --aggressive')}
     tar -zcf ../repack.tgz .
     curl -o /dev/null --upload-file ../repack.tgz '#{@put_object_url}'
-    cd ..
-    rm -rf #{work_dir}
     "
   end
 
