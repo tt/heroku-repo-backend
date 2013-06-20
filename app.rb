@@ -13,12 +13,22 @@ class Rack::Auth::Basic::Request
   def password; credentials.last; end
 end
 
-get '/commands/*', provides: 'text/event-stream' do
-  auth = Rack::Auth::Basic::Request.new(request.env)
+helpers do
 
-  if not auth.provided? or not auth.basic?
-    halt 401, { 'WWW-Authenticate' => 'Basic realm="Heroku"' }, ''
+  def auth
+    Rack::Auth::Basic::Request.new(request.env)
   end
+
+  def protected!
+    if not auth.provided? or not auth.basic?
+      halt 401, { 'WWW-Authenticate' => 'Basic realm="Heroku"' }, ''
+    end
+  end
+
+end
+
+get '/commands/*', provides: 'text/event-stream' do
+  protected!
 
   command_class = case params.fetch('splat').first
                   when 'gc'          then GarbageCollect
