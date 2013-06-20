@@ -25,6 +25,34 @@ helpers do
     end
   end
 
+  def execute(command_class)
+    heroku = Heroku::API.new(:username => auth.username, :password => auth.password)
+
+    release = heroku.get_release(params.fetch('app'), 'new')
+
+    params.merge!({
+      'get' => release.body['repo_get_url'],
+      'put' => release.body['repo_put_url']
+    })
+
+    command = command_class.new(params)
+
+    stream(:keep_open) do |out|
+      response = EventResponse.new(out)
+
+      stdin, stdout, stderr = Open3.popen3(command.to_s)
+
+      mapping = {
+        stdout => EventResponse::IO.new('out', response),
+        stderr => EventResponse::IO.new('err', response)
+      }
+
+      IO.join(mapping)
+
+      response.close
+    end
+  end
+
 end
 
 get '/commands/*', provides: 'text/event-stream' do
@@ -39,29 +67,5 @@ get '/commands/*', provides: 'text/event-stream' do
 
   not_found if command_class.nil?
 
-  heroku = Heroku::API.new(:username => auth.username, :password => auth.password)
-
-  release = heroku.get_release(params.fetch('app'), 'new')
-
-  params.merge!({
-    'get' => release.body['repo_get_url'],
-    'put' => release.body['repo_put_url']
-  })
-
-  command = command_class.new(params)
-
-  stream(:keep_open) do |out|
-    response = EventResponse.new(out)
-
-    stdin, stdout, stderr = Open3.popen3(command.to_s)
-
-    mapping = {
-      stdout => EventResponse::IO.new('out', response),
-      stderr => EventResponse::IO.new('err', response)
-    }
-
-    IO.join(mapping)
-
-    response.close
-  end
+  execute command_class
 end
