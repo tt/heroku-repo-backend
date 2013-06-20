@@ -33,13 +33,6 @@ helpers do
     @release ||= heroku.get_release(params.fetch('app'), 'new').body
   end
 
-  def arguments
-    params.merge({
-      'get' => release['repo_get_url'],
-      'put' => release['repo_put_url']
-    })
-  end
-
   def execute(command)
     stream(:keep_open) do |out|
       response = EventResponse.new(out)
