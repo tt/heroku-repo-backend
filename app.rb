@@ -58,22 +58,22 @@ helpers do
 
 end
 
-get '/commands/gc', provides: 'text/event-stream' do
+get '/commands/gc', :provides => 'text/event-stream' do
   protected!
   execute GarbageCollect.new(release)
 end
 
-get '/commands/purge_cache', provides: 'text/event-stream' do
+get '/commands/purge_cache', :provides => 'text/event-stream' do
   protected!
   execute PurgeCache.new(release)
 end
 
-get '/commands/reset', provides: 'text/event-stream' do
+get '/commands/reset', :provides => 'text/event-stream' do
   protected!
   execute ResetRepository.new(release)
 end
 
-get '/commands/update-ref', provides: 'text/event-stream' do
+get '/commands/update-ref', :provides => 'text/event-stream' do
   protected!
   execute UpdateReference.new(release, params.fetch('sha1'))
 end
