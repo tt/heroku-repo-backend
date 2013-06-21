@@ -12,7 +12,8 @@ class UpdateReference
     mkdir unpack
     cd unpack
     tar -zxf ../repo.tgz
-    git update-ref HEAD #{@sha1} >/dev/null 2>&1
+    echo -n 'Updating reference...'
+    git update-ref HEAD #{@sha1} >/dev/null 2>&1 && echo ' done'
     tar -zcf ../repack.tgz .
     curl --silent -o /dev/null --upload-file ../repack.tgz '#{@put_object_url}'
     "

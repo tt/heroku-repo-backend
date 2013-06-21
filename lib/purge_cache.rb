@@ -11,7 +11,8 @@ class PurgeCache
     mkdir unpack
     cd unpack
     tar -zxf ../repo.tgz
-    rm -rf .cache/*
+    echo -n 'Purging cache...'
+    rm -rf .cache/* && echo ' done'
     tar -zcf ../repack.tgz .
     curl --silent -o /dev/null --upload-file ../repack.tgz '#{@put_object_url}'
     "
