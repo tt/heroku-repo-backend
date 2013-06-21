@@ -50,7 +50,7 @@ describe EventResponse do
       timer = mock
       timer.should_receive(:cancel)
       EventMachine::PeriodicTimer.stub(:new) { timer }
-      out = mock
+      out = stub
       out.stub(:<<)
       out.stub(:close)
       response = EventResponse.new(out)
