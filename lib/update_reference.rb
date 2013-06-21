@@ -8,13 +8,13 @@ class UpdateReference
   def to_s(work_dir)
     "
     cd #{work_dir}
-    curl -o repo.tgz '#{@get_object_url}'
+    curl --silent -o repo.tgz '#{@get_object_url}'
     mkdir unpack
     cd unpack
     tar -zxf ../repo.tgz
     #{capture("git update-ref HEAD #{@sha1}")}
     tar -zcf ../repack.tgz .
-    curl -o /dev/null --upload-file ../repack.tgz '#{@put_object_url}'
+    curl --silent -o /dev/null --upload-file ../repack.tgz '#{@put_object_url}'
     "
   end
 

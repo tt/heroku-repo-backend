@@ -10,7 +10,7 @@ class ResetRepository
     cd unpack
     git init --bare .
     tar -zcf ../repack.tgz .
-    curl -o /dev/null --upload-file ../repack.tgz '#{@put_object_url}'
+    curl --silent -o /dev/null --upload-file ../repack.tgz '#{@put_object_url}'
     "
   end
 end
