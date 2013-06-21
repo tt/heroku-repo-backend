@@ -11,7 +11,7 @@ class GarbageCollect
     mkdir unpack
     cd unpack
     tar -zxf ../repo.tgz
-    git gc --aggressive
+    git gc --aggressive >/dev/null 2>&1
     tar -zcf ../repack.tgz .
     curl --silent -o /dev/null --upload-file ../repack.tgz '#{@put_object_url}'
     "

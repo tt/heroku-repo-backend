@@ -8,7 +8,7 @@ class ResetRepository
     cd #{work_dir}
     mkdir -p unpack
     cd unpack
-    git init --bare .
+    git init --bare . >/dev/null 2>&1
     tar -zcf ../repack.tgz .
     curl --silent -o /dev/null --upload-file ../repack.tgz '#{@put_object_url}'
     "
