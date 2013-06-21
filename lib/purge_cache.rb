@@ -4,7 +4,7 @@ class PurgeCache
     @put_object_url = release.fetch('repo_put_url')
   end
 
-  def to_s(work_dir)
+  def to_s
     "
     set -e
     curl --silent -o repo.tgz '#{@get_object_url}'

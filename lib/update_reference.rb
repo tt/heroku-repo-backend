@@ -5,7 +5,7 @@ class UpdateReference
     @sha1 = sha1
   end
 
-  def to_s(work_dir)
+  def to_s
     "
     set -e
     curl --silent -o repo.tgz '#{@get_object_url}'
