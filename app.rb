@@ -8,10 +8,6 @@ require './lib/reset_repository'
 require './lib/purge_cache'
 require './lib/update_reference'
 
-class Rack::Auth::Basic::Request
-  def password; credentials.last; end
-end
-
 helpers do
 
   def auth
