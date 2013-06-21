@@ -11,16 +11,9 @@ class GarbageCollect
     mkdir unpack
     cd unpack
     tar -zxf ../repo.tgz
-    #{capture('git gc --aggressive')}
+    git gc --aggressive
     tar -zcf ../repack.tgz .
     curl --silent -o /dev/null --upload-file ../repack.tgz '#{@put_object_url}'
     "
-  end
-
-  private
-
-  def capture(command)
-    "script -q /dev/null #{command}" if RUBY_PLATFORM.downcase.include?('darwin')
-    command
   end
 end
