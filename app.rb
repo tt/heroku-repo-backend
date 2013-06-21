@@ -1,11 +1,8 @@
-require 'fileutils'
 require 'heroku-api'
-require 'open3'
 require 'sinatra'
-require 'tmpdir'
 
+require './lib/command_runner'
 require './lib/event_response'
-require './lib/io'
 require './lib/garbage_collect'
 require './lib/reset_repository'
 require './lib/purge_cache'
@@ -39,18 +36,10 @@ helpers do
     stream(:keep_open) do |out|
       response = EventResponse.new(out)
 
-      work_dir = Dir.mktmpdir
+      out = EventResponse::IO.new('out', response)
+      err = EventResponse::IO.new('err', response)
 
-      stdin, stdout, stderr = Open3.popen3(command.to_s(work_dir))
-
-      mapping = {
-        stdout => EventResponse::IO.new('out', response),
-        stderr => EventResponse::IO.new('err', response)
-      }
-
-      IO.join(mapping)
-
-      FileUtils.rm_r work_dir
+      CommandRunner.new.execute(command, out, err)
 
       response.close
     end
