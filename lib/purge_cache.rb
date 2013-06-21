@@ -6,14 +6,16 @@ class PurgeCache
 
   def to_s(work_dir)
     "
+    set -e
     cd #{work_dir}
-    curl -o repo.tgz '#{@get_object_url}'
+    curl --silent -o repo.tgz '#{@get_object_url}'
     mkdir unpack
     cd unpack
     tar -zxf ../repo.tgz
-    rm -rf .cache/*
+    echo -n 'Purging cache...'
+    rm -rf .cache/* && echo ' done'
     tar -zcf ../repack.tgz .
-    curl -o /dev/null --upload-file ../repack.tgz '#{@put_object_url}'
+    curl --silent -o /dev/null --upload-file ../repack.tgz '#{@put_object_url}'
     "
   end
 end

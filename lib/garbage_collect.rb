@@ -6,21 +6,16 @@ class GarbageCollect
 
   def to_s(work_dir)
     "
+    set -e
     cd #{work_dir}
-    curl -o repo.tgz '#{@get_object_url}'
+    curl --silent -o repo.tgz '#{@get_object_url}'
     mkdir unpack
     cd unpack
     tar -zxf ../repo.tgz
-    #{capture('git gc --aggressive')}
+    echo -n 'Compressing repository...'
+    git gc --aggressive >/dev/null 2>&1 && echo ' done'
     tar -zcf ../repack.tgz .
-    curl -o /dev/null --upload-file ../repack.tgz '#{@put_object_url}'
+    curl --silent -o /dev/null --upload-file ../repack.tgz '#{@put_object_url}'
     "
-  end
-
-  private
-
-  def capture(command)
-    "script -q /dev/null #{command}" if RUBY_PLATFORM.downcase.include?('darwin')
-    command
   end
 end

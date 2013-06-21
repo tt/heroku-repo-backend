@@ -5,12 +5,14 @@ class ResetRepository
 
   def to_s(work_dir)
     "
+    set -e
     cd #{work_dir}
-    mkdir -p unpack
+    mkdir unpack
     cd unpack
-    git init --bare .
+    echo -n 'Resetting repository...'
+    git init --bare . >/dev/null 2>&1 && echo ' done'
     tar -zcf ../repack.tgz .
-    curl -o /dev/null --upload-file ../repack.tgz '#{@put_object_url}'
+    curl --silent -o /dev/null --upload-file ../repack.tgz '#{@put_object_url}'
     "
   end
 end
