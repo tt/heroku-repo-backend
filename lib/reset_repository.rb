@@ -7,7 +7,7 @@ class ResetRepository
     "
     set -e
     cd #{work_dir}
-    mkdir -p unpack
+    mkdir unpack
     cd unpack
     echo -n 'Resetting repository...'
     git init --bare . >/dev/null 2>&1 && echo ' done'
