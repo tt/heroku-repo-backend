@@ -3,10 +3,9 @@ class ResetRepository
     @put_object_url = release.fetch('repo_put_url')
   end
 
-  def to_s(work_dir)
+  def to_s
     "
     set -e
-    cd #{work_dir}
     mkdir unpack
     cd unpack
     echo -n 'Resetting repository...'

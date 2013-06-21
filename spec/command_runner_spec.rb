@@ -5,19 +5,23 @@ describe CommandRunner do
 
   context '#execute' do
     it 'writes output' do
-      command = stub
-      command.stub(:to_s) {|dir| 'echo foo' }
       out = mock
       out.should_receive(:write).with("foo\n")
-      subject.execute(command, out, nil)
+      subject.execute('echo foo', out, nil)
     end
 
     it 'writes errors' do
-      command = stub
-      command.stub(:to_s) {|dir| 'echo foo 1>&2' }
       err = mock
       err.should_receive(:write).with("foo\n")
-      subject.execute(command, nil, err)
+      subject.execute('echo foo 1>&2', nil, err)
+    end
+
+    it 'spawns in work directory' do
+      Dir.stub(:mktmpdir) { '/tmp' }
+      FileUtils.stub(:rm_r)
+      IO.stub(:join)
+      Open3.should_receive(:popen3).with(nil, :chdir => '/tmp')
+      subject.execute(nil, nil, nil)
     end
 
     it 'removes work directory' do
