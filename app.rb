@@ -39,13 +39,16 @@ helpers do
     stream(:keep_open) do |out|
       response = EventResponse.new(out)
 
+      out = EventResponse::IO.new('out', response)
+      err = EventResponse::IO.new('err', response)
+
       work_dir = Dir.mktmpdir
 
       stdin, stdout, stderr = Open3.popen3(command.to_s(work_dir))
 
       mapping = {
-        stdout => EventResponse::IO.new('out', response),
-        stderr => EventResponse::IO.new('err', response)
+        stdout => out,
+        stderr => err
       }
 
       IO.join(mapping)
