@@ -6,6 +6,7 @@ class GarbageCollect
 
   def to_s(work_dir)
     "
+    set -e
     cd #{work_dir}
     curl --silent -o repo.tgz '#{@get_object_url}'
     mkdir unpack

@@ -5,6 +5,7 @@ class ResetRepository
 
   def to_s(work_dir)
     "
+    set -e
     cd #{work_dir}
     mkdir -p unpack
     cd unpack
