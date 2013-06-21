@@ -8,7 +8,7 @@ class CommandRunner
   def execute(command, out, err)
     work_dir = Dir.mktmpdir
 
-    stdin, stdout, stderr = Open3.popen3(command.to_s(work_dir))
+    stdin, stdout, stderr = Open3.popen3(command.to_s(work_dir), :chdir => work_dir)
 
     mapping = {
       stdout => out,
